@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,33 +26,25 @@ func getBooks(c *gin.Context) {
 
 func checkoutBook(c *gin.Context) {
 	id, ok := c.GetQuery("id")
-	fmt.Println("hello")
-
 	if !ok {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "missing id query param "})
 		return
 	}
 	book, err := getBookById(id)
-
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Book not found"})
 		return
 	}
-
 	if book.Quantity <= 0 {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "book not available"})
 		return
 	}
-
 	book.Quantity -= 1
 	c.IndentedJSON(http.StatusOK, book)
-
 }
 
 func returnBook(c *gin.Context) {
-
 	id, ok := c.GetQuery("id")
-
 	if !ok {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "missing id in the query param"})
 		return
@@ -103,7 +94,6 @@ func createBook(c *gin.Context) {
 
 func main() {
 	router := gin.Default()
-
 	router.GET("/books", getBooks)
 	router.GET("/books/:id", bookById)
 	router.POST("/books", createBook)
